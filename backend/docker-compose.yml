@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: golang_postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: golang_postgres
+    ports:
+      - "6500:5432"
+    networks:
+      - internal
+
+  golang_app:
+    build: .
+    container_name: golang_app
+    environment:
+      DB_USER: admin
+      DB_PASSWORD: password123
+      DB_NAME: golang_postgres
+      DB_HOST: postgres  # Use service name here
+      DB_PORT: 5432      # PostgreSQL default port
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+    networks:
+      - internal
+    command: air ./cmd/server/main.go
+
+networks:
+    internal:
+      driver: bridge
