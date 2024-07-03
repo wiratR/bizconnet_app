@@ -6,19 +6,25 @@ import (
 	"os"
 
 	"github.com/wiratR/go-orm-jwt/config"
-	"github.com/wiratR/go-orm-jwt/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
-var DB *gorm.DB //database
+var DB *gorm.DB
 
-func ConnectDB(config *config.Config) {
-
-	fmt.Printf("Database hostname = %s\n", config.DBHost)
+func InitDatabase() {
 
 	var err error
+
+	config, err := config.LoadConfig(".")
+
+	if err != nil {
+		log.Fatalf("could not load config: %v", err)
+	}
+
+	fmt.Printf("Database hostname = %s\n", config.DBHost)
+	fmt.Printf("Database port = %d\n", config.DBPort)
+
 	// dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%d sslmode=disable TimeZone=Asia/Bangkok",
 	// 	config.DBHost,
 	// 	config.DBUserName,
@@ -34,22 +40,13 @@ func ConnectDB(config *config.Config) {
 		" port=" + os.Getenv("DB_PORT") +
 		" sslmode=disable TimeZone=Asia/Bangkok"
 
-	// Connect to PostgreSQL
-	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		log.Fatalf("failed to connect to the database: %v", err)
-	}
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-	DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"")
-	DB.Logger = logger.Default.LogMode(logger.Info)
-
-	log.Println("Running Migrations")
-	err = DB.AutoMigrate(&models.User{})
 	if err != nil {
-		log.Fatal("Migration Failed:  \n", err.Error())
-		os.Exit(1)
+		log.Fatal("Failed to connect to database:", err)
+	} else {
+		log.Println("Database connection established")
 	}
 
 	log.Println("🚀 Connected Successfully to the Database")
-
 }

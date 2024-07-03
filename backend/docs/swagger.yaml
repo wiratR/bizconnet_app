@@ -93,6 +93,19 @@ definitions:
       updated_at:
         type: string
     type: object
+  models.UserUpdate:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+      role:
+        type: string
+      verified:
+        type: boolean
+    type: object
 host: 127.0.0.1:8000
 info:
   contact:
@@ -107,7 +120,7 @@ info:
   title: Swagger Example API
   version: "1.0"
 paths:
-  /Auth/login:
+  /auth/login:
     post:
       consumes:
       - application/json
@@ -133,7 +146,7 @@ paths:
       summary: login
       tags:
       - Auth
-  /Auth/logout:
+  /auth/logout:
     get:
       consumes:
       - application/json
@@ -148,7 +161,7 @@ paths:
       summary: logout
       tags:
       - Auth
-  /Auth/register:
+  /auth/register:
     post:
       consumes:
       - application/json
@@ -214,6 +227,30 @@ paths:
               $ref: '#/definitions/models.User'
             type: array
       summary: get current user
+      tags:
+      - User
+  /users/update:
+    patch:
+      consumes:
+      - application/json
+      description: update user detail
+      parameters:
+      - description: User Update Data
+        in: body
+        name: Payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+      summary: update user detail
       tags:
       - Uer
 schemes:

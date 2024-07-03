@@ -21,7 +21,7 @@ func GetAllUsers(c *fiber.Ctx) error {
 // GetMe func get current user
 // @Description Get current user.
 // @Summary get current user
-// @Tags Uer
+// @Tags User
 // @Accept json
 // @Produce json
 // @Success 200 {array} models.User

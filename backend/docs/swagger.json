@@ -21,7 +21,7 @@
     "host": "127.0.0.1:8000",
     "basePath": "/api",
     "paths": {
-        "/Auth/login": {
+        "/auth/login": {
             "post": {
                 "description": "login",
                 "consumes": [
@@ -61,7 +61,7 @@
                 }
             }
         },
-        "/Auth/logout": {
+        "/auth/logout": {
             "get": {
                 "description": "logout",
                 "consumes": [
@@ -84,7 +84,7 @@
                 }
             }
         },
-        "/Auth/register": {
+        "/auth/register": {
             "post": {
                 "description": "register new account",
                 "consumes": [
@@ -137,9 +137,46 @@
                     "application/json"
                 ],
                 "tags": [
-                    "Uer"
+                    "User"
                 ],
                 "summary": "get current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.User"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/update": {
+            "patch": {
+                "description": "update user detail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Uer"
+                ],
+                "summary": "update user detail",
+                "parameters": [
+                    {
+                        "description": "User Update Data",
+                        "name": "Payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UserUpdate"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -328,6 +365,26 @@
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "models.UserUpdate": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "boolean"
                 }
             }
         }

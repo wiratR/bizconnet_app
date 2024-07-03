@@ -1,4 +1,4 @@
-### how to use
+### how to runing application
 
 git clone <>
 
@@ -7,7 +7,7 @@ git clone <>
 
 ```bash
 cd backend
-docker
+docker-compose up -d --build
 ```
 
 

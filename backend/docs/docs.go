@@ -24,7 +24,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/Auth/login": {
+        "/auth/login": {
             "post": {
                 "description": "login",
                 "consumes": [
@@ -64,7 +64,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/Auth/logout": {
+        "/auth/logout": {
             "get": {
                 "description": "logout",
                 "consumes": [
@@ -87,7 +87,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/Auth/register": {
+        "/auth/register": {
             "post": {
                 "description": "register new account",
                 "consumes": [
@@ -140,9 +140,46 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Uer"
+                    "User"
                 ],
                 "summary": "get current user",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.User"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/update": {
+            "patch": {
+                "description": "update user detail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Uer"
+                ],
+                "summary": "update user detail",
+                "parameters": [
+                    {
+                        "description": "User Update Data",
+                        "name": "Payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.UserUpdate"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -331,6 +368,26 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "models.UserUpdate": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                },
+                "verified": {
+                    "type": "boolean"
                 }
             }
         }

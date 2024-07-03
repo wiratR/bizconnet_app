@@ -8,6 +8,8 @@ services:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: password123
       POSTGRES_DB: golang_postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     ports:
       - "6500:5432"
     networks:
@@ -33,3 +35,7 @@ services:
 networks:
     internal:
       driver: bridge
+
+volumes:
+  postgres-data:
+

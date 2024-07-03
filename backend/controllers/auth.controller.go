@@ -1,12 +1,13 @@
 package controllers
 
 import (
+	"errors"
 	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/wiratR/go-orm-jwt/config"
-	"github.com/wiratR/go-orm-jwt/database"
+	dbconn "github.com/wiratR/go-orm-jwt/database"
 	"github.com/wiratR/go-orm-jwt/models"
 	"github.com/wiratR/go-orm-jwt/utils"
 )
@@ -20,8 +21,12 @@ import (
 // @Param Payload body models.SignUpInput true "Register Data"
 // @Success 201 {array} models.ResponseSuccessUser "Ok"
 // @Failure 400 {object} models.ResponseError "Error"
-// @Router /Auth/register [post]
+// @Router /auth/register [post]
 func SignUpUser(c *fiber.Ctx) error {
+
+	if dbconn.DB == nil {
+		return errors.New("database connection is nil")
+	}
 
 	var payload *models.SignUpInput
 	var isSuccess bool = false
@@ -46,14 +51,16 @@ func SignUpUser(c *fiber.Ctx) error {
 		Email:    strings.ToLower(payload.Email),
 		Password: hashedPassword,
 	}
+
 	// create new user
-	result := database.DB.Create(&newUser)
+	result := dbconn.DB.Create(&newUser)
 
 	if result.Error != nil && strings.Contains(result.Error.Error(), "duplicate key value violates unique") {
 		return c.Status(fiber.StatusBadRequest).JSON(models.ApiResponse(isSuccess, fiber.Map{"message": "Passwords do not match"}))
 	} else if result.Error != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(models.ApiResponse(isSuccess, fiber.Map{"message": "Something bad happened"}))
 	}
+
 	isSuccess = true
 	// return success 201
 	return c.Status(fiber.StatusOK).JSON(models.ApiResponse(isSuccess, fiber.Map{"user": models.FilterUserRecord(&newUser)}))
@@ -68,8 +75,12 @@ func SignUpUser(c *fiber.Ctx) error {
 // @Param Payload body models.SignInInput true "Login Data"
 // @Success 200 {object} models.ResponseSuccessToken "Ok"
 // @Failure 400 {object} models.ResponseError "Error"
-// @Router /Auth/login [post]
+// @Router /auth/login [post]
 func SignInUser(c *fiber.Ctx) error {
+
+	if dbconn.DB == nil {
+		return errors.New("database connection is nil")
+	}
 
 	var payload *models.SignInInput
 	var isSuccess bool = false
@@ -85,7 +96,7 @@ func SignInUser(c *fiber.Ctx) error {
 	}
 
 	var user models.User
-	result := database.DB.First(&user, "email = ?", strings.ToLower(payload.Email))
+	result := dbconn.DB.First(&user, "email = ?", strings.ToLower(payload.Email))
 	if result.Error != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(models.ApiResponse(isSuccess, fiber.Map{"message": "Invalid email or Password"}))
 	}
@@ -158,7 +169,7 @@ func SignInUser(c *fiber.Ctx) error {
 // @Accept json
 // @Produce json
 // @Success 200 {object} models.ResponseError "Ok"
-// @Router /Auth/logout [get]
+// @Router /auth/logout [get]
 func LogoutUser(c *fiber.Ctx) error {
 	expired := time.Now().Add(-time.Hour * 24)
 	c.Cookie(&fiber.Cookie{
