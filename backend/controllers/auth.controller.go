@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"errors"
+	"fmt"
+	"log"
 	"strings"
 	"time"
 
@@ -78,6 +80,8 @@ func SignUpUser(c *fiber.Ctx) error {
 // @Router /auth/login [post]
 func SignInUser(c *fiber.Ctx) error {
 
+	log.Println("auth controller : start signin ")
+
 	if dbconn.DB == nil {
 		return errors.New("database connection is nil")
 	}
@@ -85,9 +89,15 @@ func SignInUser(c *fiber.Ctx) error {
 	var payload *models.SignInInput
 	var isSuccess bool = false
 
+	// fmt.Printf("auth controller : email = %s\n", payload.Email)
+	// fmt.Printf("auth controller : password = %s\n", payload.Password)
+
 	if err := c.BodyParser(&payload); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(models.ApiResponse(isSuccess, fiber.Map{"message": err.Error()}))
 	}
+
+	fmt.Printf("auth controller : email = %s\n", payload.Email)
+	fmt.Printf("auth controller : password = %s\n", payload.Password)
 
 	errors := models.ValidateStruct(payload)
 	if errors != nil {
