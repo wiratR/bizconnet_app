@@ -2,11 +2,23 @@ import 'package:flutter/material.dart';
 import '../home/home_screen.dart';
 import '../../services/auth/auth_service.dart';
 
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
 
-class LoginScreen extends StatelessWidget {
+class _LoginScreenState extends State<LoginScreen> {
   final AuthService authService = AuthService();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   void _login(BuildContext context) async {
     String? token = await authService.login(
@@ -57,8 +69,18 @@ class LoginScreen extends StatelessWidget {
               controller: _passwordController,
               decoration: InputDecoration(
                 labelText: 'Password',
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                    });
+                  },
+                ),
               ),
-              obscureText: true,
+              obscureText: !_isPasswordVisible,
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
@@ -84,22 +106,4 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
-
-  // void _login(BuildContext context) {
-  //   final email = _emailController.text;
-  //   final password = _passwordController.text;
-
-  //   // Replace with your actual login logic
-  //   // For now, we'll just simulate a successful login
-  //   if (email == 'user@example.com' && password == 'password') {
-  //     // Navigate to the home screen on success
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => HomeScreen()),
-  //     );
-  //   } else {
-  //     // Handle login failure, show error message, etc.
-  //     print('Login failed. Incorrect email or password.');
-  //   }
-  // }
 }

@@ -1,7 +1,31 @@
 import 'package:flutter/material.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
+class ForgotPasswordScreen extends StatefulWidget {
+  @override
+  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _resetPassword(BuildContext context) {
+    final email = _emailController.text;
+
+    // Perform your password reset logic here
+    // For now, we'll just print the value
+    print('Email: $email');
+
+    // Optionally, show a success message or navigate to another screen
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Password reset link sent')),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +56,5 @@ class ForgotPasswordScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _resetPassword(BuildContext context) {
-    final email = _emailController.text;
-
-    // Perform your password reset logic here
-    // For now, we'll just print the value
-    print('Email: $email');
-
-    // Optionally, show a success message or navigate to another screen
-    // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Password reset link sent')));
   }
 }

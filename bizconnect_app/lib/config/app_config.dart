@@ -1,3 +1,4 @@
 class AppConfig {
-  static const String baseUrl = 'http://127.0.0.1:8000/api'; // Replace with your API base URL
+    // Replace with your API base URL
+    static const String baseUrl = 'http://localhost:8000/api'; 
 }
