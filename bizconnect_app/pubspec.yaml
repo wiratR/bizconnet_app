@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   global_configuration: ^2.0.0
+  qr_code_scanner: ^1.0.1
   flutter:
     sdk: flutter
   shared_preferences:
@@ -19,3 +20,5 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/logo.png
