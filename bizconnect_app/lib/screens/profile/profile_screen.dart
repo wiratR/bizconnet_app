@@ -3,8 +3,8 @@ import './myqr/my_qr_screen.dart';
 import './mycontract/my_contract_screen.dart'; 
 import './myticket/my_ticket_screen.dart'; 
 import './term/term_condition_screen.dart';
-import './privateevent/private_event_screen.dart';
 import './myaccount/my_account_screen.dart';
+import '../../components/dialog/private_event.dart';
 
 
 class ProfileScreen extends StatelessWidget {
@@ -94,10 +94,16 @@ class ProfileScreen extends StatelessWidget {
                 title: Text('Private Event'),
                 trailing: Icon(Icons.arrow_forward_ios),
                 onTap: () {
-                  // Navigate to PrivateEventScreen when tapped
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PrivateEventScreen()),
+                  // // Navigate to PrivateEventScreen when tapped
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => PrivateEventScreen()),
+                  // );
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return PrivateEventDialog();
+                    },
                   );
                 },
               ),
