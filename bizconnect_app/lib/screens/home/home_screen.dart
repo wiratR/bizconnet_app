@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import '../login/login_screen.dart';
-import '../profile/profile_screen.dart'; // Import the ProfileScreen
-import '../qrscan/qr_scan_screen.dart'; // Import the QrScanScreen
-import '../event/event_screen.dart'; // Import the MyEventScreen
-import '../favorite/favorite_screen.dart'; // Import the MyFavoriteScreen
-import '../../services/auth/auth_service.dart';
+import '../profile/profile_screen.dart';          // Import the ProfileScreen
+import '../qrscan/qr_scan_screen.dart';           // Import the QrScanScreen
+import '../event/event_screen.dart';              // Import the MyEventScreen
+import '../favorite/favorite_screen.dart';        // Import the MyFavoriteScreen
+import '../../components/card/custom_card.dart';  // Import custom card
+import './popularevents/popular_view_all.dart';   // Import propular view all
+import './specialevents/special_view_all.dart';   // Import special view all
+import '../../services/auth/auth_service.dart';   // Import service for authentication
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -139,6 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildBody() {
+    
     switch (_selectedIndex) {
       case 0:
         return _buildHomeContent();
@@ -153,19 +158,93 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Widget _buildHomeContent() {
+Widget _buildHomeContent() {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Popular Events',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Popular Events',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => PopularViewAllScreen()),
+                    );
+                  },
+                  child: Text(
+                    'view all',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.blue, // Same color as the text
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 10),
-            // EventCard widgets and other content
+            Row(
+              children: [
+                Expanded(
+                  child: CustomCard(), // Left card
+                ),
+                SizedBox(width: 10), // Space between cards
+                Expanded(
+                  child: CustomCard(), // Right card
+                ),
+              ],
+            ),
+            SizedBox(height: 20), // Space between sections
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Special Events',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SpecialViewAllScreen()),
+                    );
+                  },
+                  child: Text(
+                    'view all',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.blue, // Same color as the text
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // Text(
+            //   'Special Events',
+            //   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            // ),
+            SizedBox(height: 10),
+            Row(
+              children: [
+                Expanded(
+                  child: CustomCard(), // Left card
+                ),
+                SizedBox(width: 10), // Space between cards
+                Expanded(
+                  child: CustomCard(), // Right card
+                ),
+              ],
+            ),
+            // Add more rows or other content as needed
           ],
         ),
       ),
