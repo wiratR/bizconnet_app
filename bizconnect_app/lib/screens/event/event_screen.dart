@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../components/card/event_card.dart';
+import './eventdetail/event_detail_screen.dart';
 
 class EventScreen extends StatelessWidget {
   @override
@@ -12,7 +13,17 @@ class EventScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            EventCard(title: "Today's Event", count: 3),
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventDetailScreen(title: "Today's Event"),
+                  ),
+                );
+              },
+              child : EventCard(title: "Today's Event", count: 3),
+            ),
             SizedBox(height: 16),
             EventCard(title: 'Upcoming Event', count: 0),
             SizedBox(height: 16),
