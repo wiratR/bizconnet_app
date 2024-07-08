@@ -9,6 +9,7 @@ environment:
 dependencies:
   global_configuration: ^2.0.0
   qr_code_scanner: ^1.0.1
+  qr_flutter: ^4.1.0
   flutter:
     sdk: flutter
   shared_preferences:
