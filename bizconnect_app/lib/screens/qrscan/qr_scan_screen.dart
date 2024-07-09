@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:flutter/services.dart';
 
 class QrScanScreen extends StatefulWidget {
   @override
@@ -7,42 +8,68 @@ class QrScanScreen extends StatefulWidget {
 }
 
 class _QrScanScreenState extends State<QrScanScreen> {
-  late QRViewController qrController;
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  String qrCodeResult = "Not Yet Scanned";
 
   @override
   void initState() {
     super.initState();
+    _scanQRCode();
   }
 
-  @override
-  void dispose() {
-    qrController.dispose();
-    super.dispose();
+  Future<void> _scanQRCode() async {
+    try {
+      var result = await BarcodeScanner.scan();
+      setState(() {
+        qrCodeResult = result.rawContent;
+      });
+    } on PlatformException catch (ex) {
+      if (ex.code == BarcodeScanner.cameraAccessDenied) {
+        setState(() {
+          qrCodeResult = "Camera permission was denied";
+        });
+      } else {
+        setState(() {
+          qrCodeResult = "Unknown Error $ex";
+        });
+      }
+    } on FormatException {
+      setState(() {
+        qrCodeResult = "You pressed the back button before scanning anything";
+      });
+    } catch (ex) {
+      setState(() {
+        qrCodeResult = "Unknown Error $ex";
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Scan QR Code'),
+        title: Text("Scan QR Code"),
       ),
-      body: QRView(
-        key: qrKey,
-        onQRViewCreated: _onQRViewCreated,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "Result",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            Text(
+              qrCodeResult,
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _scanQRCode,
+              child: Text("Open Scanner"),
+            ),
+          ],
+        ),
       ),
     );
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      qrController = controller;
-    });
-    controller.scannedDataStream.listen((scanData) {
-      // Handle scanned QR data here
-      print('Scanned data: ${scanData.code}');
-      // Example of handling scanned data:
-      // Navigator.pop(context, scanData.code);
-    });
   }
 }
