@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../components/appbar/custom_app_bar.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -30,9 +31,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Forgot Password'),
-      ),
+      appBar: CustomAppBar(title: 'Forgot password'),
       body: Padding(
         padding: EdgeInsets.all(16.0),
         child: Column(
